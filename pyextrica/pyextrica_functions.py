@@ -124,7 +124,7 @@ class PyExtricaFunctions:
                 return catalogs
         except Exception as e:
             # Raise an exception if there is an error
-            raise Exception(f"Error retrieving catalog names. Please check your credentials and platform. Error: {str(e)}")
+            raise Exception(f"Error retrieving table columns. Please check your credentials and platform. Error: {str(e)}")
         
     @staticmethod
     def execute_sql_query(engine, sql_query):
