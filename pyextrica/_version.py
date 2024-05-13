@@ -1,0 +1,6 @@
+__title__ = "pyextrica"
+__description__ = "Python client library for Extrica"
+__url__ = "https://github.com/extricatrianz/pyextrica"
+__version__ = "17.2.0"
+__author__ = "Extrica Team"
+__author_email__ = "extricaproductionsupport@trianz.com"
