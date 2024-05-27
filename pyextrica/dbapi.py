@@ -271,10 +271,10 @@ class Connection(object):
         value = must_use_legacy_prepared_statements.get((self.host, self.port))
         if value is None:
             try:
-                query = pyextrica.client.TrinoQuery(
-                    self._create_request(),
-                    query="EXECUTE IMMEDIATE 'SELECT 1'")
-                query.execute()
+                # query = pyextrica.client.TrinoQuery(
+                #     self._create_request(),
+                #     query="EXECUTE IMMEDIATE 'SELECT 1'")
+                # query.execute()
                 value = False
             except Exception as e:
                 logger.warning(

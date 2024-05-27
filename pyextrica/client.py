@@ -53,6 +53,7 @@ from pyextrica.extrica_rest_handler import ExtricaHTTPHandler
 import pyextrica.logging
 from pyextrica import constants, exceptions
 from pyextrica._version import __version__
+from pyextrica.query_parser import QueryParser
 
 __all__ = ["ClientSession", "TrinoQuery", "TrinoRequest", "PROXIES"]
 
@@ -738,6 +739,7 @@ class TrinoQuery(object):
         self._legacy_primitive_types = legacy_primitive_types
         self._row_mapper: Optional[RowMapper] = None
         self._extrica_http_handler = ExtricaHTTPHandler("https://"+request._host, self._request._client_session.access_token)
+        self._query_parser = QueryParser()
 
     @property
     def query_id(self) -> Optional[str]:
@@ -793,14 +795,16 @@ class TrinoQuery(object):
         try:
             session = self._request._client_session
             # QUERY TYPE, QUERY_FOR, IS_TABLE_QUERY, SCHEMA_NAME/VALUES, MODIFIED_QUERY
-           
+            is_capability_query = self._query_parser.parse_query(self._query, session.platform)
             #API to fetch modified query : calling pyextrica query engine API
-            modified_response = self._extrica_http_handler._get_modified_query(session.user, self._query,session.access_token)
-            if not modified_response.ok:
-                self._request.raise_response_error(modified_response)
-           
-            modified_extrica_query = modified_response.text
-            #Modified query to be passed to trion query engine to get resultset
+            if not is_capability_query:
+                self._query = self._query_parser.remove_schema_from_query(self._query, session.platform)
+                modified_response = self._extrica_http_handler._get_modified_query(session.user, self._query,session.access_token)
+                if not modified_response.ok:
+                    self._request.raise_response_error(modified_response)
+                modified_extrica_query = modified_response.text
+            else:
+                modified_extrica_query = self._query
             response = self._request.post(modified_extrica_query, additional_http_headers)
              
         except requests.exceptions.RequestException as e:

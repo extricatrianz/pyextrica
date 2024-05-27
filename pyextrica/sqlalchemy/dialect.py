@@ -160,7 +160,6 @@ class TrinoDialect(DefaultDialect):
             catalog=self._get_default_catalog_name(connection)
             columns = ExtricaHTTPHandler._get_columns_ds(user,token, host,catalog,schema,table)
             return columns
-            
 
     def get_catalog_names(self, connection: Connection, **kw) -> List[str]:
         """
@@ -223,8 +222,13 @@ class TrinoDialect(DefaultDialect):
         host=self._get_default_host(connection)
         user=self._get_default_user(connection)
         if platform == 'data_products':
-            schemas = ExtricaHTTPHandler._get_schemas_dp(user, catalog, token, host)
-            return schemas
+            if catalog == 'system':
+                params = {"platform": platform, "catalog": catalog}
+                schemas = ExtricaHTTPHandler._get_schemas_dp_1(user, token, host, params)
+                return schemas
+            else:
+                schemas = ExtricaHTTPHandler._get_schemas_dp(user, catalog, token, host)
+                return schemas
         else:
             schemas = ExtricaHTTPHandler._get_schemas_ds(user, catalog, token, host)
             return schemas
@@ -263,11 +267,53 @@ class TrinoDialect(DefaultDialect):
         user=self._get_default_user(connection)
         schema=schema
         if platform == 'data_products':
-            tables = ExtricaHTTPHandler._get_tables_dp(user, catalog, token, host, schema)
-            return tables
+            if catalog == 'system':
+                params = {"platform": platform, "catalog": catalog, "schema": schema}
+                tables = ExtricaHTTPHandler._get_tables_dp_1(user, token, host, params)
+                table_names = [table[0] for table in tables]  
+                return table_names
+            else:
+                tables = ExtricaHTTPHandler._get_tables_dp(user, catalog, token, host, schema)
+                return tables
+
         else:
             tables = ExtricaHTTPHandler._get_tables_ds(user, catalog, token, host, schema)
             return tables
+
+    def get_pk_constraint(self, connection: Connection, table_name: str, schema: str = None, **kw) -> Dict[str, Any]:
+        """Trino has no support for primary keys. Returns a dummy"""
+        return dict(name=None, constrained_columns=[])
+
+    def get_primary_keys(self, connection: Connection, table_name: str, schema: str = None, **kw) -> List[str]:
+        pk = self.get_pk_constraint(connection, table_name, schema)
+        return pk.get("constrained_columns") 
+
+    def get_foreign_keys(
+        self, connection: Connection, table_name: str, schema: str = None, **kw
+    ) -> List[Dict[str, Any]]:
+        """Trino has no support for foreign keys. Returns an empty list."""
+        return []
+
+    def get_sequence_names(self, connection: Connection, schema: str = None, **kw) -> List[str]:
+        """Trino has no support for sequences. Returns an empty list."""
+        return []
+
+    def get_unique_constraints(
+        self, connection: Connection, table_name: str, schema: str = None, **kw
+    ) -> List[Dict[str, Any]]:
+        """Trino has no support for unique constraints. Returns an empty list."""
+        return []
+
+    def get_check_constraints(
+        self, connection: Connection, table_name: str, schema: str = None, **kw
+    ) -> List[Dict[str, Any]]:
+        """Trino has no support for check constraints. Returns an empty list."""
+        return []
+    
+    def get_indexes(self, connection: Connection, table_name: str, schema: str = None, **kw) -> List[Dict[str, Any]]:
+        """Extrica has no support for indexes."""
+        return []
+
 
     def _raw_connection(self, connection: Union[Engine, Connection]) -> trino_dbapi.Connection:
         if isinstance(connection, Engine):
@@ -327,3 +373,14 @@ class TrinoDialect(DefaultDialect):
             return f"{schema_part}.{table_part}"
 
         return table_part
+    
+    def has_table(self, connection: Connection, table_name: str, schema: str = None, **kw) -> bool:
+        get_table_names = self.get_table_names(connection, schema)
+        return len(get_table_names) > 0
+
+    def get_view_names(self, connection: Connection, schema: str = None, **kw) -> List[str]:
+        schema = schema or self._get_default_schema_name(connection)
+        if schema is None:
+            raise exc.NoSuchTableError("schema is required")
+
+        return []

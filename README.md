@@ -1,6 +1,6 @@
 # PyExtrica Library for Extrica Product
 
-PyExtrica allows you to query and transform data in Extrica (Data To AI) platform directly without having to download the data locally. This library provides seamless access to the Extrica platform, allowing users to execute SQL queries and retrieve metadata such as catalog names, schema names, table names, and column information.
+PyExtrica allows you to query and transform data in [Extrica](https://extrica.ai/) (Data To AI) platform directly without having to download the data locally. This library provides seamless access to the Extrica platform, allowing users to execute SQL queries and retrieve metadata such as catalog names, schema names, table names, and column information.
 
 ## Getting Started
 
@@ -86,7 +86,7 @@ print(joined_df.head())
 PyExtrica provides the following methods for interacting with the Extrica platform:
 
 - extrica_engine: Connects to the Extrica platform.
-execute_sql_query: Executes SQL queries.
+- execute_sql_query: Executes SQL queries.
 - get_catalog_names: Retrieves catalog names. (Requires platform=data_products for data products or platform=data_sources for data sources). For data products, catalog name represents the domain name, and schema name represents the subdomain name. For data sources, it is similar to Trino catalog and schema.
 - get_schema_names: Retrieves schema names. (Requires platform=data_products for data products or platform=data_sources for data sources)
 - get_table_names: Retrieves table names. (Requires platform=data_products for data products or platform=data_sources for data sources)

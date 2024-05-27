@@ -1,6 +1,5 @@
 import re
 from typing import Any, Dict, Iterator, List, Optional, Tuple, Type, Union
-
 import sqlalchemy
 from sqlalchemy import func, util
 from sqlalchemy.sql import sqltypes
@@ -128,6 +127,7 @@ _type_map = {
     "int": sqltypes.INTEGER,
     "integer": sqltypes.INTEGER,
     "bigint": sqltypes.BIGINT,
+    "number": sqltypes.NUMERIC,
     # === Floating-point ===
     "real": sqltypes.REAL,
     "double": DOUBLE,
@@ -136,6 +136,9 @@ _type_map = {
     # === String ===
     "varchar": sqltypes.VARCHAR,
     "char": sqltypes.CHAR,
+    "text": sqltypes.VARCHAR,
+    "varchar2":sqltypes.VARCHAR,
+    "character varying":sqltypes.VARCHAR,
     "varbinary": sqltypes.VARBINARY,
     "json": JSON,
     # === Date and time ===
@@ -143,7 +146,8 @@ _type_map = {
     "time": TIME,
     "time with time zone": TIME,
     "timestamp": TIMESTAMP,
-    "timestamp with time zone": TIMESTAMP
+    "timestamp with time zone": TIMESTAMP,
+    "timestamp_ntz":TIMESTAMP
 }
 
 if hasattr(sqlalchemy, "Uuid"):

@@ -1,6 +1,7 @@
 import json
 from urllib.parse import quote
 import requests
+from pyextrica.sqlalchemy import datatype
 
 __all__ = ["ExtricaHTTPHandler"]
 
@@ -130,6 +131,22 @@ class ExtricaHTTPHandler:
             print(f"Error occurred while fetching schemas: {e}")
             return []
         
+    def _get_schemas_dp_1(email, token, host, params):
+        encoded_params = "&".join([f"{key}={quote(str(value))}" for key, value in params.items()])
+        url = f"https://{host}/core/python/schemas/{email}"
+        headers = {"Authorization": f"Bearer {token}"}
+
+        url_with_params = f"{url}?{encoded_params}"
+        try:
+            response = requests.get(url_with_params, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            return data["data"]
+        except requests.exceptions.RequestException as e:
+                print(f"Error occurred while fetching schemas: {e}")
+                return []
+    
+        
     def _get_tables_dp(userEmail, domainName, token, host, subDomainName):
         """
         Function to retrieve data product names from the Extrica Data Product platform.
@@ -162,7 +179,21 @@ class ExtricaHTTPHandler:
         except requests.exceptions.RequestException as e:
             print(f"Error occurred while fetching tables: {e}")
             return []
-        
+    
+    def _get_tables_dp_1(email, token, host, params=None):
+        encoded_params = "&".join([f"{key}={quote(str(value))}" for key, value in params.items()])
+        # endpoint = f"/core/python/tables/sreekanth.gude"
+        endpoint = f"https://{host}/core/python/tables/{email}"
+        url_with_params = f"{endpoint}?{encoded_params}"
+        headers = {'Authorization': 'Bearer '+token}
+        try:
+            response = requests.get(url=url_with_params,headers=headers)
+            data = response.json()
+            return data["data"]
+        except requests.exceptions.RequestException as e:
+            print(f"Error occurred while fetching tables: {e}")
+            return []  
+          
     def _get_columns_dp(userEmail, token, host, dataproduct):
         """
         Function to retrieve columns of a data product from the Extrica Data Product platform and return as a dictionary.
@@ -190,9 +221,9 @@ class ExtricaHTTPHandler:
             columns = dataproduct.get('columns', [])
             for column in columns:
                 name = column.get('name')
-                column_type = column.get('type')
+                column_type = datatype.parse_sqltype(column.get('type'))
                 if name and column_type:
-                    columns_list.append({'name': name, 'dataType': column_type})
+                    columns_list.append({'name': name, 'type': column_type, 'nullable':'YES'})
         except Exception as e:
             print(f"Error occurred while extracting columns: {e}")
         return columns_list
@@ -316,7 +347,7 @@ class ExtricaHTTPHandler:
                 column_name = column_data.get('name')
                 data_type = column_data.get('dataType')
                 if column_name and data_type:
-                    column_info = {'name': column_name, 'dataType': data_type}
+                    column_info = {'name': column_name, 'type': data_type, 'nullable':'YES'}
                     columns_info.append(column_info)
             return columns_info
         except Exception as e:
