@@ -17,17 +17,25 @@ class QueryParser:
         else:
             return False
 
+        
     def remove_schema_from_query(self, _query, platform):
         parsed_query = Parser(_query)
         if platform == "data_products" and parsed_query.tables:
-            part_1 = parsed_query.tables[0].split('.')[0]
-            part_2 = parsed_query.tables[0].split('.')[1]
-            
-            _query =_query.replace(f'"{part_1}"."{part_2}"', part_2)
-            _query =_query.replace(f'"{part_1}".{part_2}', part_2)
-            _query =_query.replace(f'{part_1}."{part_2}"', part_2)
-            _query =_query.replace(f'{part_1}.{part_2}', part_2)
-            print("_query: ", _query)
+            for i, table in enumerate(parsed_query.tables):
+                parts = table.split('.')
+                if len(parts) == 2:
+                    part_1 = parts[0]
+                    part_2 = parts[1]
+                    pattern_1 = re.compile(rf'"{re.escape(part_1)}"\."{re.escape(part_2)}"')
+                    pattern_2 = re.compile(rf'"{re.escape(part_1)}"\.{re.escape(part_2)}')
+                    pattern_3 = re.compile(rf'{re.escape(part_1)}\."{re.escape(part_2)}"')
+                    pattern_4 = re.compile(rf'{re.escape(part_1)}\.{re.escape(part_2)}')
+
+                    _query = pattern_1.sub(part_2, _query)
+                    _query = pattern_2.sub(part_2, _query)
+                    _query = pattern_3.sub(part_2, _query)
+                    _query = pattern_4.sub(part_2, _query)
+                    parsed_query.tables[i] = part_2
             return _query
         else:
             return _query
