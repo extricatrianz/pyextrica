@@ -182,7 +182,6 @@ class ExtricaHTTPHandler:
     
     def _get_tables_dp_1(email, token, host, params=None):
         encoded_params = "&".join([f"{key}={quote(str(value))}" for key, value in params.items()])
-        # endpoint = f"/core/python/tables/sreekanth.gude"
         endpoint = f"https://{host}/core/python/tables/{email}"
         url_with_params = f"{endpoint}?{encoded_params}"
         headers = {'Authorization': 'Bearer '+token}

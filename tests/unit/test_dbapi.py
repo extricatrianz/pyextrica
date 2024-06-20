@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 import unittest
 from unittest.mock import MagicMock, patch
 from pyextrica.dbapi import Connection, Cursor, TimeBoundLRUCache, DBAPITypeObject, Binary, Date, Time, Timestamp
@@ -58,30 +51,9 @@ class TestTrinoDBAPIModule(unittest.TestCase):
                 roles=None,
                 timezone=None,
                 platform=None,
-                access_token='mock_token_value'  # Ensure the correct token value is passed
+                access_token='mock_token_value'  
             )
 
-
-    # def test_cursor_execution(self):
-    #     # Test executing a query using a cursor
-    #     connection = Connection(host='example.com', port=8080)
-    #     with patch('pyextrica.dbapi.pyextrica.client.ClientSession') as mock_client_session:
-    #         # Mocking auth parameter to have a token attribute
-    #         mock_auth = MagicMock()
-    #         mock_auth.token = 'mock_token_value'
-    #         connection.auth = mock_auth
-    #         cursor = connection.cursor()
-    #         cursor._query = MagicMock()
-    #         cursor._query.execute.return_value = [['result1'], ['result2']]
-    #         cursor.execute('SELECT * FROM table')
-    #         self.assertEqual(cursor.fetchone(), ['result1'])
-    #         self.assertEqual(cursor.fetchall(), [['result2']])
-
-
-
-        
-
-    
 
     @patch('pyextrica.dbapi.time')
     def test_cache_expiry(self, mock_time):
@@ -108,16 +80,6 @@ class TestTrinoDBAPIModule(unittest.TestCase):
         self.assertEqual(string_type, 'varchar')
         self.assertNotEqual(string_type, 'int')
 
-    # def test_transaction_management(self):
-    #     # Test transaction management methods
-    #     connection = Connection(host='example.com', port=8080)
-    #     connection.start_transaction()
-    #     self.assertIsNotNone(connection.transaction)
-    #     connection.rollback()
-    #     self.assertIsNone(connection.transaction)
-    #     connection.start_transaction()
-    #     connection.commit()
-    #     self.assertIsNone(connection.transaction)
 
     def test_describe_output(self):
         # Test DescribeOutput named tuple creation

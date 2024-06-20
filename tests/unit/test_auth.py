@@ -1,50 +1,6 @@
-
-
-
-
-# import unittest
-# from unittest.mock import MagicMock
-# from requests import Session
-# from pyextrica.auth import ExtricaAuthentication, _BearerAuth
-
-
-# class TestExtricaAuthentication(unittest.TestCase):
-#     def test_set_http_session(self):
-#         token = "dummy_token"
-#         auth = ExtricaAuthentication(token)
-#         http_session = Session()
-#         http_session.auth = MagicMock()
-
-#         result_session = auth.set_http_session(http_session)
-
-#         self.assertEqual(http_session.auth.token, token)
-#         self.assertEqual(result_session, http_session)
-
-#     def test_get_exceptions(self):
-#         auth = ExtricaAuthentication("dummy_token")
-#         exceptions = auth.get_exceptions()
-
-#         self.assertEqual(exceptions, ())
-
-#     def test_equality(self):
-#         token1 = "token1"
-#         token2 = "token2"
-#         auth1 = ExtricaAuthentication(token1)
-#         auth2 = ExtricaAuthentication(token2)
-#         auth3 = ExtricaAuthentication(token1)
-
-#         self.assertNotEqual(auth1, auth2)
-#         self.assertEqual(auth1, auth3)
-
-
-# if __name__ == "__main__":
-#     unittest.main()
-
-
 import unittest
 from unittest.mock import MagicMock
 from pyextrica.auth import ExtricaAuthentication, _BearerAuth
-#from pyextrica.auth import _BearerAuth-code.pyextrica.auth import ExtricaAuthentication
 from requests import PreparedRequest, Session
 from pyextrica.auth import Authentication
 

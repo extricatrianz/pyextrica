@@ -14,11 +14,7 @@ class TestExtricaHTTPHandler(unittest.TestCase):
         self.base_url = 'https://example.com'
         self.access_token = 'sample_token'
         self.handler = ExtricaHTTPHandler(self.base_url, self.access_token)
-
-
-
-
-   
+  
 
     @patch('requests.get')
     def test_get(self, mock_get):
@@ -116,7 +112,6 @@ class TestExtricaHTTPHandler(unittest.TestCase):
         mock_get.return_value = mock_response
 
         columns = ExtricaHTTPHandler._get_columns_dp('user@example.com', 'token123', 'example.com', 'DataProduct1')
-       # self.assertEqual(columns,  [{'name': 'Column1', 'type': NullType(), 'nullable': 'YES'}, {'[51 chars]ES'}])
 
     @patch('pyextrica.extrica_rest_handler.requests.get')
     def test_get_catalogs_ds(self, mock_get):
@@ -170,9 +165,6 @@ class TestExtricaHTTPHandler(unittest.TestCase):
 
         # Calling the function with mock parameters
         columns = ExtricaHTTPHandler._get_columns_ds('user@example.com', 'token123', 'example.com', 'Catalog1', 'Schema1', 'Table1')
-
-        # Asserting the returned value
-        #self.assertEqual(columns, [{'name': 'Column1', 'dataType': 'Type1'}, {'name': 'Column2', 'dataType': 'Type2'}])
 
     
 

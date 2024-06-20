@@ -77,7 +77,7 @@ class TestExceptions(unittest.TestCase):
             raise Http504Error()
 
 import unittest
-from pyextrica.exceptions import TrinoQueryError  # Import the TrinoQueryError class from your module
+from pyextrica.exceptions import TrinoQueryError  
 
 class TestTrinoQueryError(unittest.TestCase):
     def test_error_properties(self):

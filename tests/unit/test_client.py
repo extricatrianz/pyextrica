@@ -59,7 +59,6 @@ from pyextrica.client import TrinoRequest
 from unittest.mock import MagicMock
 from pyextrica import __version__, constants
 from typing import Optional
-#from pyextrica.auth import KerberosAuthentication, _OAuth2TokenBearer
 from pyextrica.client import (
     
     ClientSession,
@@ -95,16 +94,16 @@ from typing import Generic, TypeVar, List, Optional, Any
 from datetime import time
 from decimal import Decimal
 try:
-    from zoneinfo import ZoneInfoNotFoundError  # type: ignore
+    from zoneinfo import ZoneInfoNotFoundError 
 except ModuleNotFoundError:
-    from backports.zoneinfo._common import ZoneInfoNotFoundError  # type: ignore
+    from backports.zoneinfo._common import ZoneInfoNotFoundError  
 
 import unittest
 from unittest.mock import Mock
 import pytz
 import unittest
 from threading import Lock
-#from your_module import ClientSession, get_header_values, get_session_property_values, get_prepared_statement_values, get_roles_values
+
 
 class TestClientSession(unittest.TestCase):
   

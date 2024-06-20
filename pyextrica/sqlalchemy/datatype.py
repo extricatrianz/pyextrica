@@ -225,8 +225,6 @@ def parse_sqltype(type_str: str) -> TypeEngine:
     if type_name == "array":
         item_type = parse_sqltype(type_opts)
         if isinstance(item_type, sqltypes.ARRAY):
-            # Multi-dimensions array is normalized in SQLAlchemy, e.g:
-            # `ARRAY(ARRAY(INT))` in Trino SQL will become `ARRAY(INT(), dimensions=2)` in SQLAlchemy
             dimensions = (item_type.dimensions or 1) + 1
             return sqltypes.ARRAY(item_type.item_type, dimensions=dimensions)
         return sqltypes.ARRAY(item_type)
